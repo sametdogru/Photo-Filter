@@ -1,7 +1,6 @@
 # Photo-Filter
+![rsz_simulator_screen_shot_-_iphone_xs_-_2019-10-21_at_190412](https://user-images.githubusercontent.com/47924250/67225450-e98b9e80-f43b-11e9-90b9-fb2c8d40f36a.png)
 
-![Simulator Screen Shot - iPhone Xs - 2019-10-21 at 19 04 12](https://user-images.githubusercontent.com/47924250/67224317-91539d00-f439-11e9-8803-ff7dc8d925ea.png)
+![rsz_simulator_screen_shot_-_iphone_xs_-_2019-10-21_at_190441](https://user-images.githubusercontent.com/47924250/67225659-4d15cc00-f43c-11e9-9188-50d43002e37e.png)
 
-![Simulator Screen Shot - iPhone Xs - 2019-10-21 at 19 04 41](https://user-images.githubusercontent.com/47924250/67224552-1d65c480-f43a-11e9-8d21-84fb054bd418.png)
-
-![Simulator Screen Shot - iPhone Xs - 2019-10-21 at 19 04 47](https://user-images.githubusercontent.com/47924250/67224592-39696600-f43a-11e9-812b-982aaa6e42eb.png)
+![rsz_simulator_screen_shot_-_iphone_xs_-_2019-10-21_at_190447](https://user-images.githubusercontent.com/47924250/67225934-c3b2c980-f43c-11e9-8ef8-c827a6f32730.png)
