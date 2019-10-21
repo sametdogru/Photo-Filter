@@ -1,60 +1,22 @@
-//
-//  InstagramManager.swift
-//  PhotoApp
-//
-//  Created by Ahmet Doğru on 24.09.2019.
-//  Copyright © 2019 Samet Doğru. All rights reserved.
-//
-
-import Foundation
 import UIKit
 
-
-class InstagramManager: NSObject, UIDocumentInteractionControllerDelegate {
+final class InstagramManager {
     
-    private let documentInteractionController = UIDocumentInteractionController()
-    private let kInstagramURL = "instagram://"
-    private let kUTI = "com.instagram.exclusivegram"
-    private let kfileNameExtension = "instagram.igo"
-    private let kAlertViewTitle = "Error"
-    private let kAlertViewMessage = "Please install the Instagram application"
-    
-  
-    class var sharedManager: InstagramManager {
-        struct Singleton {
-            static let instance = InstagramManager()
-        }
-        return Singleton.instance
+    static func instagramIsActive() -> Bool {
+        let url = URL(string: "instagram-stories://share")
+        let isActive = UIApplication.shared.canOpenURL(url!)
+        return isActive
     }
     
-    func postImageToInstagramWithCaption(imageInstagram: UIImage, instagramCaption: String, view: UIView) {
-
+    static func shareInstagramStory(img: UIImage) {
+        let data: NSData = img.pngData()! as NSData
+        let url = URL(string: "instagram-stories://share")
         
-        let instagramURL = NSURL(string: kInstagramURL)
-        if UIApplication.shared.canOpenURL(instagramURL! as URL) {
-            let jpgPath = (NSTemporaryDirectory() as NSString).appendingPathComponent(kfileNameExtension)
-            
-            do {
-                try imageInstagram.jpegData(compressionQuality: 0.75)?.write(to: URL(fileURLWithPath: jpgPath), options: .atomic)
-            } catch {
-                print(error)
-            }
-            
-            let rect = CGRect.zero
-            let fileURL = NSURL.fileURL(withPath: jpgPath)
-            
-            
-            documentInteractionController.url = fileURL
-            documentInteractionController.delegate = self
-            documentInteractionController.uti = kUTI
-            
-        
-            documentInteractionController.annotation = ["InstagramCaption": instagramCaption]
-            documentInteractionController.presentOpenInMenu(from: rect, in: view, animated: true)
-        }
-        else {
-            
-            UIAlertView(title: kAlertViewTitle, message: kAlertViewMessage, delegate:nil, cancelButtonTitle:"Ok").show()
-        }
+        let pasteboardItems: [String: Any] = ["com.instagram.sharedSticker.stickerImage": data as Data]
+        let pasteboardOptions = UIPasteboard.OptionsKey(rawValue: "instagramOption")
+        UIPasteboard.general.setItems([pasteboardItems], options: [pasteboardOptions: Date().addingTimeInterval(60 * 5)])
+        UIApplication.shared.open(url!, options: [:], completionHandler: nil)
     }
 }
+
+

@@ -7,13 +7,16 @@
 //
 
 import Foundation
+import UIKit
 
 class FilterModel {
     var name: String
     var filter: String
-    
-    init(name:String, filter:String) {
+    var image: UIImage
+
+    init(name: String, filter: String, image: UIImage) {
         self.name = name
         self.filter = filter
+        self.image = image
     }
 }

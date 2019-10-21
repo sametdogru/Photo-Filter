@@ -25,19 +25,21 @@ class PhotoAlbumManager: NSObject {
       
         var collectionsAllPhoto: PHFetchResult<PHAssetCollection>
         var collectionsFavorites: PHFetchResult<PHAssetCollection>
-        var collectionsUsers: PHFetchResult<PHAssetCollection>
+        var collectionsUser: PHFetchResult<PHAssetCollection>
  
         collectionsAllPhoto = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumUserLibrary, options: nil)
 
         collectionsFavorites = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumFavorites, options: nil)
         
-        collectionsUsers = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
+        collectionsUser = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
         
+
         // get albums
         
         albumTitle(collectionsAllPhoto)
         albumTitle(collectionsFavorites)
-        albumTitle(collectionsUsers)
+        albumTitle(collectionsUser)
+
     }
     
     func albumTitle(_ type: PHFetchResult<PHAssetCollection>) {
@@ -60,13 +62,10 @@ class PhotoAlbumManager: NSObject {
             
         } else if type == self.titleArray[1] {
             collectionsT = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumFavorites, options: nil)
-        }
-        else if type == self.titleArray[2] {
-            collectionsT = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
         } else {
             collectionsT = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
         }
-        
+
         collectionsT.enumerateObjects { (collection, index, _) in
             let photoInAlbum = PHAsset.fetchAssets(in: collection, options: nil)
             
@@ -89,6 +88,3 @@ class PhotoAlbumManager: NSObject {
         }
     }
 }
-
-
-

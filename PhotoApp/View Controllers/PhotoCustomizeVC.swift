@@ -14,26 +14,26 @@ class PhotoCustomizeVC: UIViewController, UICollectionViewDelegate,UICollectionV
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var bgImageView: UIImageView!
     @IBOutlet weak var filterCollectionView: UICollectionView!
+    @IBOutlet weak var activityView: UIActivityIndicatorView!
+    
     
     var selectedIndexPath: IndexPath?
-    
-    var filterImageArray = [UIImage]()
-    
-    var myFilterModel = [FilterModel]()
     var context = CIContext()
+    var myFilterModel = [FilterModel]()
     var originalImage: UIImage! // = UIImage(named: "image")!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.imageView.image = originalImage
         addFilters()
-        self.blurEffect()
+        blurEffect()
     }
+
 
     func blurEffect() {
         
         let currentFilter = CIFilter(name: "CIGaussianBlur")
-        let beginImage = CIImage(image: originalImage!)
+        let beginImage = CIImage(image: self.resizeImage(image: originalImage, newWidth: 100))
         currentFilter!.setValue(beginImage, forKey: kCIInputImageKey)
         currentFilter!.setValue(10, forKey: kCIInputRadiusKey)
         
@@ -48,27 +48,26 @@ class PhotoCustomizeVC: UIViewController, UICollectionViewDelegate,UICollectionV
     }
     
     func addFilters() {
-        
-        filter("Original", filter: "none")
-        filter("Elegant", filter: "CIPhotoEffectInstant")
-        filter("Noir", filter: "CIPhotoEffectNoir")
-        filter("Black", filter: "CIPhotoEffectTonal")
-        filter("Alive", filter: "CIPhotoEffectTransfer")
-        filter("Sepia", filter: "CISepiaTone")
-
-        for  i in 0...self.myFilterModel.count-1 {
-            
-            if i == 0 {
-                self.filterImageArray.append(originalImage)
+ 
+        for i in 0..<CICategoryColorEffectNames.count {
+            if CICategoryColorEffectNames[i] == "Original" {
+                self.myFilterModel.append(FilterModel(name: CICategoryColorEffectTitle[i], filter: CICategoryColorEffectNames[i], image: self.resizeImage(image: originalImage, newWidth: 100)))
             } else {
-                self.filterImageArray.append(self.applyAppleFilterToImage(with: originalImage, filterName: self.myFilterModel[i].filter))
+                let image = self.applyAppleFilterToImage(with: self.resizeImage(image: originalImage, newWidth: 100), filterName: CICategoryColorEffectNames[i])
+                self.myFilterModel.append(FilterModel(name: CICategoryColorEffectTitle[i], filter: CICategoryColorEffectNames[i], image: image))
             }
         }
         self.filterCollectionView.reloadData()
     }
     
-    func filter(_ name: String, filter: String) {
-        self.myFilterModel.append(FilterModel(name: name, filter: filter))
+    func resizeImage(image: UIImage!, newWidth: CGFloat) -> UIImage {
+        let scale = newWidth / image.size.width
+        let newHeight = image.size.height * scale
+        UIGraphicsBeginImageContext(CGSize(width: newWidth, height: newHeight))
+        image.draw(in: CGRect(x: 0, y: 0, width: newWidth, height: newHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage!
     }
 
     func applyAppleFilterToImage(with image: UIImage, filterName: String) -> UIImage {
@@ -91,13 +90,12 @@ class PhotoCustomizeVC: UIViewController, UICollectionViewDelegate,UICollectionV
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
        
         let cell = filterCollectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath) as! FilterCollectionViewCell
-        cell.configure(with: self.filterImageArray[indexPath.row], name: self.myFilterModel[indexPath.row].name)
+        cell.configure(with: self.myFilterModel[indexPath.row].image, name: self.myFilterModel[indexPath.row].name)
         
         if indexPath.row == 0 {
             cell.nameView.isHidden = false
             cell.imageFilter.image = UIImage(named: "none")
         }
-        
         return cell
     }
     
@@ -115,7 +113,7 @@ class PhotoCustomizeVC: UIViewController, UICollectionViewDelegate,UICollectionV
             cell.nameView.isHidden = false
             
             if indexPath.row != 0 {
-                self.imageView.image = self.filterImageArray[indexPath.row]
+                self.imageView.image = self.applyAppleFilterToImage(with: originalImage, filterName: self.myFilterModel[indexPath.row].filter)
             } else {
                 self.imageView.image = originalImage
             }

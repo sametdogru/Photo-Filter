@@ -11,9 +11,10 @@ import UIKit
 class PhotoSharedVC: UIViewController {
 
     @IBOutlet weak var imageView: UIImageView!
-    
     @IBOutlet weak var bgImageView: UIImageView!
     @IBOutlet weak var shareStoryButton: UIButton!
+    @IBOutlet weak var storyShareView: UIView!
+    
     var image = UIImage()
     var bgImage = UIImage()
     
@@ -26,14 +27,19 @@ class PhotoSharedVC: UIViewController {
     }
     
     func setUI() {
-        shareStoryButton.layer.cornerRadius = 24
-        shareStoryButton.layer.borderWidth = 2
-        shareStoryButton.layer.borderColor = UIColor(red: 255/255, green: 58/255, blue: 120/255, alpha: 1.0).cgColor
+        storyShareView.layer.cornerRadius = 24
+        storyShareView.layer.borderWidth = 2
+        storyShareView.layer.borderColor = UIColor(red: 255/255, green: 58/255, blue: 120/255, alpha: 1.0).cgColor
     }
     
-    
     @IBAction func shareStoryButton(_ sender: Any) {
-        InstagramManager.sharedManager.postImageToInstagramWithCaption(imageInstagram: self.image, instagramCaption: "My Photo", view: self.view)
+        if InstagramManager.instagramIsActive() {
+            InstagramManager.shareInstagramStory(img: self.image)
+        } else {
+            let alert = UIAlertController(title: "Error", message: "Please install the Instagram application", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
     
     @IBAction func shareButton(_ sender: Any) {
@@ -58,4 +64,11 @@ class PhotoSharedVC: UIViewController {
         }
     }
     
+    @IBAction func backButton(_ sender: Any) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    @IBAction func homeButton(_ sender: Any) {
+    self.navigationController?.popToRootViewController(animated: true)
+    }
 }

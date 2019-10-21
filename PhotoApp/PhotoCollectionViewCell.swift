@@ -7,11 +7,9 @@
 //
 
 import UIKit
+import Photos
 
 class photoCollectionViewCell: UICollectionViewCell {
     
-    @IBOutlet weak var lineView: UIView!
-    @IBOutlet weak var lblTitle: UILabel!
-    
-    
+    @IBOutlet weak var imageView: UIImageView!
 }
